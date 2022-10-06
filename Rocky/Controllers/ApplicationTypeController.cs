@@ -2,10 +2,7 @@
 using Rocky.Data;
 using Rocky.Models;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using System.ComponentModel.DataAnnotations;
-=======
->>>>>>> 8cdd35f7921731db71aed6bc25da1702bea5abf1
 
 namespace Rocky.Controllers
 {
@@ -33,7 +30,6 @@ namespace Rocky.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ApplicationType applicationType)
         {
-<<<<<<< HEAD
             if (ModelState.IsValid)
             {
                 _db.ApplicationType.Add(applicationType);
@@ -103,12 +99,9 @@ namespace Rocky.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
 
-            //return View(appType);
-=======
-            _db.ApplicationType.Add(applicationType);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
->>>>>>> 8cdd35f7921731db71aed6bc25da1702bea5abf1
+            //_db.ApplicationType.Add(applicationType);
+            //_db.SaveChanges();
+            //return RedirectToAction("Index");
         }
     }
 }

@@ -26,15 +26,31 @@ namespace Rocky.Controllers
             return View(objLists);
         }
 
-        //Get - Create
-        public IActionResult Create()
+        //Get - Upsert
+        public IActionResult Upsert(int? id)
         {
+            Product product = new Product();
+            if (id == null)
+            {
+                //this is for create
+                return View(product);
+            }
+            else
+            {
+                product = _db.Product.Find(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                return View(product);
+            }
             return View();
         }
 
+        //POST - Upsert
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category category)
+        public IActionResult Upsert(Category category)
         {
             if (ModelState.IsValid)
             {
@@ -45,34 +61,6 @@ namespace Rocky.Controllers
             return View(category);
         }
 
-        //Get - Edit
-        public IActionResult Edit(int? id)
-        {
-            if (id != null || id != 0)
-            {
-                var category = _db.Category.Find(id);
-                if (category != null)
-                {
-                    return View(category);
-                }
-            }
-
-            return NotFound();
-        }
-
-        //Post - Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.Category.Update(category);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(category);
-        }
 
         //Get - Delete
         public IActionResult Delete(int? id)

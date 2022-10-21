@@ -78,7 +78,7 @@
                             else
                             {
                                 //create
-                                <input type="submit" onclick="retutn validationInput()" class="btn btn-primary w-100" value="Create" />
+                                <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Create" />
                             }
                         </div>
                         <div class="col">
@@ -96,8 +96,20 @@
 
 @section Scripts{
 
-    @{
+    @{    
         <partial name="_ValidationScriptsPartial" />
     }
-
+    <script>
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please upload an Image!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
 }

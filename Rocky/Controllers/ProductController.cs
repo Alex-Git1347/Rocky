@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky.Data;
 using Rocky.Models;
 using Rocky.Models.ViewModels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Rocky.Controllers
@@ -12,10 +15,11 @@ namespace Rocky.Controllers
     public class ProductController : Controller
     {
         private ApplicationDBContext _db;
-
-        public ProductController(ApplicationDBContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -64,11 +68,28 @@ namespace Rocky.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Product.Add(productVM.Product);
+                var files = HttpContext.Request.Form.Files;
+                var webRootPath = _webHostEnvironment.WebRootPath;
+
+                if (productVM.Product.Id == 0)
+                {
+                    var upload = webRootPath + WebConstants.ImagePath;
+                    var fileName = Guid.NewGuid().ToString();
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productVM.Product.Image = fileName + extension;
+                    _db.Product.Add(productVM.Product);                    
+                }
+
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(productVM.Product);
+            return View();
         }
 
 

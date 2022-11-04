@@ -137,10 +137,10 @@ namespace Rocky.Controllers
         {            
             if (id != null || id != 0)
             {
-                var category = _db.Category.Find(id);
-                if (category != null)
+                var product = _db.Product.Find(id);
+                if (product != null)
                 {
-                    return View(category);
+                    return View(product);
                 }
             }
 
@@ -153,17 +153,30 @@ namespace Rocky.Controllers
         [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var category = _db.Category.Find(id);
-            if (category == null)
+            var product = _db.Product.Find(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _db.Category.Remove(category);
+            var webRootPath = _webHostEnvironment.WebRootPath;
+
+            if (!string.IsNullOrEmpty(product.Image))                
+            {                    
+                var upload = webRootPath + WebConstants.ImagePath;                    
+                var fileName = product.Image;                    
+                var extension = Path.GetExtension(product.Image);                    
+                var currentFile = Path.Combine(upload, product.Image);
+                    
+                if (System.IO.File.Exists(currentFile))                    
+                {                        
+                    System.IO.File.Delete(currentFile);                    
+                }                
+            }
+
+            _db.Product.Remove(product);
             _db.SaveChanges();
             return RedirectToAction("Index");
-
-            //return View(category);
         }
     }
 }

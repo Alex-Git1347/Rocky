@@ -25,11 +25,7 @@ namespace Rocky.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objLists = _db.Product;
-            foreach(var item in objLists)
-            {
-                item.Category = _db.Category.FirstOrDefault(x => x.CategoryId == item.CategoryId);
-            }
+            IEnumerable<Product> objLists = _db.Product.Include(p => p.Category).Include(p => p.AppType);
             return View(objLists);
         }
 
@@ -43,6 +39,12 @@ namespace Rocky.Controllers
                 {
                     Text = i.Name,
                     Value = i.CategoryId.ToString()
+                }),
+
+                AppTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.AppTypeId.ToString()
                 })
             };
 
@@ -128,6 +130,12 @@ namespace Rocky.Controllers
                 Value = i.CategoryId.ToString()
             });
 
+            productVM.AppTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.AppTypeId.ToString()
+            });
+
             return View(productVM);
         }
 
@@ -137,7 +145,7 @@ namespace Rocky.Controllers
         {            
             if (id != null || id != 0)
             {
-                var product = _db.Product.Find(id);
+                var product = _db.Product.Include(u => u.Category).Include(u => u.AppType).FirstOrDefault(u => u.Id == id);
                 if (product != null)
                 {
                     return View(product);
@@ -148,9 +156,8 @@ namespace Rocky.Controllers
         }
 
         //Post - Delete
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
             var product = _db.Product.Find(id);
@@ -163,14 +170,12 @@ namespace Rocky.Controllers
 
             if (!string.IsNullOrEmpty(product.Image))                
             {                    
-                var upload = webRootPath + WebConstants.ImagePath;                    
-                var fileName = product.Image;                    
-                var extension = Path.GetExtension(product.Image);                    
-                var currentFile = Path.Combine(upload, product.Image);
+                var upload = webRootPath + WebConstants.ImagePath;                                    
+                var imageFilePath = Path.Combine(upload, product.Image);
                     
-                if (System.IO.File.Exists(currentFile))                    
+                if (System.IO.File.Exists(imageFilePath))                    
                 {                        
-                    System.IO.File.Delete(currentFile);                    
+                    System.IO.File.Delete(imageFilePath);                    
                 }                
             }
 

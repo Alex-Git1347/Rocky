@@ -38,6 +38,16 @@
 
                 <div class="form-group row">
                     <div class="col-4">
+                        <label asp-for="Product.ShortDesc"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Product.ShortDesc" class="form-control" />
+                        <span asp-validation-for="Product.ShortDesc" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
                         <label asp-for="Product.Description"></label>
                     </div>
                     <div class="col-8">
@@ -64,6 +74,18 @@
                             <option disabled selected>--Select Category--</option>                            
                         </select>
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.AppTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Product.AppTypeId" asp-items="@Model.AppTypeSelectList" class="form-control">
+                            <option disabled selected>--Select Aplication Type--</option>                            
+                        </select>
+                        <span asp-validation-for="Product.AppTypeId" class="text-danger"></span>
                     </div>
                 </div>
 

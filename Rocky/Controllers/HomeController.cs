@@ -33,6 +33,17 @@ namespace Rocky.Controllers
             return View(homeVM);
         }
 
+        public IActionResult Details(int id)
+        {
+            DetailsVM DetailsVM = new DetailsVM()
+            {
+                Product = _db.Product.Include(c => c.Category).Include(t => t.AppType).FirstOrDefault(u => u.Id == id),
+                ExistsInCart = false
+            };
+
+            return View(DetailsVM);
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -28,7 +28,10 @@ namespace Rocky
         {
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDBContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDBContext>();
             services.AddHttpContextAccessor();
             services.AddSession(Options =>
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
 using Rocky.Models;
 using Rocky.Utility;
@@ -7,6 +8,7 @@ using System.Linq;
 
 namespace Rocky.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ApplicationDBContext _db;
@@ -14,7 +16,7 @@ namespace Rocky.Controllers
         public CartController(ApplicationDBContext db)
         {
             _db = db;
-        }
+        }       
         public IActionResult Index()
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();

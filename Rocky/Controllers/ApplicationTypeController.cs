@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
 using Rocky.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace Rocky.Controllers
 {
+    [Authorize(Roles = WebConstants.AdminRole)]
     public class ApplicationTypeController : Controller
     {
         private ApplicationDBContext _db;
@@ -98,10 +101,6 @@ namespace Rocky.Controllers
             _db.ApplicationType.Remove(appType);
             _db.SaveChanges();
             return RedirectToAction("Index");
-
-            //_db.ApplicationType.Add(applicationType);
-            //_db.SaveChanges();
-            //return RedirectToAction("Index");
         }
     }
 }

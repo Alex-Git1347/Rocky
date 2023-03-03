@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
 using Rocky.Models;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Rocky.Controllers
 {
+    [Authorize(Roles = WebConstants.AdminRole)]
     public class CategoryController : Controller
     {
         private ApplicationDBContext _db;

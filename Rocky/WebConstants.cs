@@ -8,6 +8,6 @@
         public const string AdminRole = "Admin";
         public const string CustomerRole = "Customer";
 
-        public static string EmailAdmin = "sanya.kvitko.1347@gmail.com";
+        public const string EmailAdmin = "sanya.kvitko.1347@gmail.com";
     }
 }

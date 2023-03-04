@@ -44,8 +44,8 @@
                                 <h5>@cartProduct.Name</h5>
                                     <div style="font-size:11px;">@cartProduct.ShortDesc</div>
                             </div>
-                            <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
-                                    <span style="font-size:17px;"> $@cartProduct.Price</span>/ sqft
+                                    <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                        <span style="font-size:17px;"> @((cartProduct.Price).ToString("c")) / sqft</span>
                             </div>
                             <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
                                 <a asp-action="Remove" asp-route-id="@cartProduct.Id" class="btn btn-outline-danger">

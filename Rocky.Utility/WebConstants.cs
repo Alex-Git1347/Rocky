@@ -1,4 +1,4 @@
-﻿namespace Rocky
+﻿namespace Rocky.Utility
 {
     public static class WebConstants
     {

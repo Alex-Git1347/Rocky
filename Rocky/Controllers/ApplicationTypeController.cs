@@ -4,8 +4,6 @@ using Rocky.Data;
 using Rocky.Models;
 using Rocky.Utility;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
 
 namespace Rocky.Controllers
 {

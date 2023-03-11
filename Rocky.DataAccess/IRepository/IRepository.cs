@@ -17,5 +17,17 @@ namespace Rocky.DataAccess.IRepository
             string includeProperties = null,
             bool isTracking = true
             );
+
+        T FirstOrdefault(
+            Expression<Func<T,bool>> filter = null,
+            string includeProperties = null,
+            bool isTracking = true
+            );
+
+        void Add(T entity);
+
+        void Remove(T entity);
+
+        void Save();
     }
 }

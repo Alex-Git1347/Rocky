@@ -18,7 +18,7 @@ namespace Rocky.DataAccess.IRepository
             bool isTracking = true
             );
 
-        T FirstOrdefault(
+        T FirstOrDefault(
             Expression<Func<T,bool>> filter = null,
             string includeProperties = null,
             bool isTracking = true

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
+using Rocky.DataAccess.IRepository;
 using Rocky.Models;
 using Rocky.Utility;
 using System.Collections;
@@ -13,16 +14,16 @@ namespace Rocky.Controllers
     [Authorize(Roles = WebConstants.AdminRole)]
     public class CategoryController : Controller
     {
-        private ApplicationDBContext _db;
+        private ICategoryRepository _categoryRepository;
 
-        public CategoryController(ApplicationDBContext db)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _db = db;
+            _categoryRepository = categoryRepository;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> objLists = _db.Category;
+            IEnumerable<Category> objLists = _categoryRepository.GetAll();
             return View(objLists);
         }
 
@@ -38,8 +39,8 @@ namespace Rocky.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Add(category);
-                _db.SaveChanges();
+                _categoryRepository.Add(category);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -50,7 +51,7 @@ namespace Rocky.Controllers
         {
             if (id != null || id != 0)
             {
-                var category = _db.Category.Find(id);
+                var category = _categoryRepository.Find(id.GetValueOrDefault());
                 if (category != null)
                 {
                     return View(category);
@@ -67,8 +68,8 @@ namespace Rocky.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Update(category);
-                _db.SaveChanges();
+                _categoryRepository.Update(category);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -79,7 +80,7 @@ namespace Rocky.Controllers
         {            
             if (id != null || id != 0)
             {
-                var category = _db.Category.Find(id);
+                var category = _categoryRepository.Find(id.GetValueOrDefault());
                 if (category != null)
                 {
                     return View(category);
@@ -95,17 +96,15 @@ namespace Rocky.Controllers
         [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var category = _db.Category.Find(id);
+            var category = _categoryRepository.Find(id.GetValueOrDefault());
             if (category == null)
             {
                 return NotFound();
             }
 
-            _db.Category.Remove(category);
-            _db.SaveChanges();
+            _categoryRepository.Remove(category);
+            _categoryRepository.Save();
             return RedirectToAction("Index");
-
-            return View(category);
         }
     }
 }

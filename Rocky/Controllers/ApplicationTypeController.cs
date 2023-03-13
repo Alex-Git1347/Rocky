@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
+using Rocky.DataAccess.IRepository;
 using Rocky.Models;
 using Rocky.Utility;
 using System.Collections.Generic;
@@ -10,16 +11,16 @@ namespace Rocky.Controllers
     [Authorize(Roles = WebConstants.AdminRole)]
     public class ApplicationTypeController : Controller
     {
-        private ApplicationDBContext _db;
+        private IApplicationTypeRepository _appTypeRepository;
 
-        public ApplicationTypeController(ApplicationDBContext db)
+        public ApplicationTypeController(IApplicationTypeRepository appTypeRepository)
         {
-            _db = db;
+            _appTypeRepository = appTypeRepository;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<ApplicationType> objLists = _db.ApplicationType;
+            IEnumerable<ApplicationType> objLists = _appTypeRepository.GetAll();
             return View(objLists);
         }
 
@@ -34,8 +35,8 @@ namespace Rocky.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.ApplicationType.Add(applicationType);
-                _db.SaveChanges();
+                _appTypeRepository.Add(applicationType);
+                _appTypeRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(applicationType);
@@ -46,7 +47,7 @@ namespace Rocky.Controllers
         {
             if (id != null || id != 0)
             {
-                var appType = _db.ApplicationType.Find(id);
+                var appType = _appTypeRepository.Find(id.GetValueOrDefault());
                 if (appType != null)
                 {
                     return View(appType);
@@ -63,8 +64,8 @@ namespace Rocky.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.ApplicationType.Update(appType);
-                _db.SaveChanges();
+                _appTypeRepository.Update(appType);
+                _appTypeRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(appType);
@@ -75,7 +76,7 @@ namespace Rocky.Controllers
         {
             if (id != null || id != 0)
             {
-                var appType = _db.ApplicationType.Find(id);
+                var appType = _appTypeRepository.Find(id.GetValueOrDefault());
                 if (appType != null)
                 {
                     return View(appType);
@@ -91,14 +92,14 @@ namespace Rocky.Controllers
         [ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var appType = _db.ApplicationType.Find(id);
+            var appType = _appTypeRepository.Find(id.GetValueOrDefault());
             if (appType == null)
             {
                 return NotFound();
             }
 
-            _db.ApplicationType.Remove(appType);
-            _db.SaveChanges();
+            _appTypeRepository.Remove(appType);
+            _appTypeRepository.Save();
             return RedirectToAction("Index");
         }
     }

@@ -23,7 +23,7 @@ namespace Rocky.DataAccess.Repository
             var objFromDb = base.FirstOrDefault(u => u.CategoryId == category.CategoryId);
             if (objFromDb != null)
             {
-                objFromDb.Name = objFromDb.Name;
+                objFromDb.Name = category.Name;
                 objFromDb.DisplayOrder = category.DisplayOrder;
             }
         }

@@ -23,7 +23,7 @@ namespace Rocky.DataAccess.Repository
             var objFromDb = base.FirstOrDefault(u => u.AppTypeId == appType.AppTypeId);
             if (objFromDb != null)
             {
-                objFromDb.Name = objFromDb.Name;
+                objFromDb.Name = appType.Name;
             }
         }
     }

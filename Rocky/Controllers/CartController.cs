@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
+using Rocky.DataAccess.IRepository;
 using Rocky.Models;
 using Rocky.Models.ViewModels;
 using Rocky.Utility;
@@ -18,24 +19,31 @@ namespace Rocky.Controllers
     [Authorize]
     public class CartController : Controller
     {
-        private readonly ApplicationDBContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
+        private readonly IProductRepository _productRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IInquiryDetailRepository _inquiryDetailRepository;
+        private readonly IInquiryHeaderRepository _inquiryHeaderRepository;
+
         [BindProperty]
         public ProductUserVM ProductUserVM { get; set; }
 
-        public CartController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController(IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IProductRepository productRepository, IApplicationUserRepository applicationUserRepository, IInquiryDetailRepository inquiryDetailRepository, IInquiryHeaderRepository inquiryHeaderRepository)
         {
-            _db = db;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _productRepository = productRepository;
+            _applicationUserRepository = applicationUserRepository;
+            _inquiryDetailRepository = inquiryDetailRepository;
+            _inquiryHeaderRepository = inquiryHeaderRepository;
         }       
 
         public IActionResult Index()
         {
             var shoppingCartList = GetShoppingCartList();
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Product> productList = _db.Product.Where(u => prodInCart.Contains(u.Id));
+            IEnumerable<Product> productList = _productRepository.GetAll(u => prodInCart.Contains(u.Id));
 
             return View(productList);
         }
@@ -56,11 +64,11 @@ namespace Rocky.Controllers
             var shoppingCartList = GetShoppingCartList();
 
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Product> productList = _db.Product.Where(u => prodInCart.Contains(u.Id));
+            IEnumerable<Product> productList = _productRepository.GetAll(u => prodInCart.Contains(u.Id));
 
             ProductUserVM = new ProductUserVM()
             {
-                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
+                ApplicationUser = _applicationUserRepository.FirstOrDefault(u => u.Id == claim.Value),
                 ProductList = productList.ToList()
             };
 

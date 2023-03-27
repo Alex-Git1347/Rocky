@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Rocky.Data;
 using Rocky.DataAccess.IRepository;
 using Rocky.Models;
+using Rocky.Models.Models;
 using Rocky.Models.ViewModels;
 using Rocky.Utility;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,6 +82,9 @@ namespace Rocky.Controllers
         [ActionName("Summary")]
         public async Task<IActionResult> SummaryPost(ProductUserVM productUserVM)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
             var pathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString() + "templates" + Path.DirectorySeparatorChar.ToString() + "Inquiry.html";
             StringBuilder poductList = new StringBuilder();
             var subject = "New Inquiry";
@@ -102,6 +107,29 @@ namespace Rocky.Controllers
                  poductList.ToString());
 
             await _emailSender.SendEmailAsync(WebConstants.EmailAdmin, subject, messageBody);
+
+            InquiryHeader inquiryHeader = new InquiryHeader()
+            {
+                AppUserId = claim.Value,
+                FullName = ProductUserVM.ApplicationUser.FullName,
+                Email = ProductUserVM.ApplicationUser.Email,
+                PhoneNumber = ProductUserVM.ApplicationUser.PhoneNumber,
+                InquiryDate = DateTime.Now
+            };
+
+            _inquiryHeaderRepository.Add(inquiryHeader);
+            _inquiryHeaderRepository.Save();
+
+            foreach (var product in productUserVM.ProductList)
+            {
+                InquiryDetail inquiryDetail = new InquiryDetail()
+                {
+                    InquiryHeaderId = inquiryHeader.Id,
+                    ProductId = product.Id,
+                };
+                _inquiryDetailRepository.Add(inquiryDetail);
+            }
+            _inquiryDetailRepository.Save();
 
             return View(nameof(InquiryConfirmation));
         }

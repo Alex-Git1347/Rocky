@@ -19,5 +19,13 @@ namespace Rocky.Controllers
         {
             return View();
         }
+
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetInquiryList()
+        {
+            return Json(new { data = _inquiryHeaderRepository.GetAll() });
+        }
+        #endregion
     }
 }

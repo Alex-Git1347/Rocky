@@ -41,8 +41,11 @@ namespace Rocky.Controllers
             {
                 _categoryRepository.Add(category);
                 _categoryRepository.Save();
+                TempData[WebConstants.Success] = "Category created Successfuly";
                 return RedirectToAction("Index");
             }
+
+            TempData[WebConstants.Success] = "Error while creating category";
             return View(category);
         }
 

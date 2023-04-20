@@ -148,6 +148,8 @@ namespace Rocky.Controllers
 
             HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
 
+            TempData[WebConstants.Success] = "Product deleted successfuly";
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -37,8 +37,11 @@ namespace Rocky.Controllers
             {
                 _appTypeRepository.Add(applicationType);
                 _appTypeRepository.Save();
+                TempData[WebConstants.Success] = "ApplicationType created successfuly";
+
                 return RedirectToAction("Index");
             }
+            TempData[WebConstants.Success] = "Error while created applicationType";
             return View(applicationType);
         }
 
@@ -66,6 +69,8 @@ namespace Rocky.Controllers
             {
                 _appTypeRepository.Update(appType);
                 _appTypeRepository.Save();
+                TempData[WebConstants.Success] = "ApplicationType edited successfuly";
+
                 return RedirectToAction("Index");
             }
             return View(appType);
@@ -100,6 +105,8 @@ namespace Rocky.Controllers
 
             _appTypeRepository.Remove(appType);
             _appTypeRepository.Save();
+            TempData[WebConstants.Success] = "ApplicationType deleted successfuly";
+
             return RedirectToAction("Index");
         }
     }

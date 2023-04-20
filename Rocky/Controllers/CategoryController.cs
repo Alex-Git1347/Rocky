@@ -73,8 +73,10 @@ namespace Rocky.Controllers
             {
                 _categoryRepository.Update(category);
                 _categoryRepository.Save();
+                TempData[WebConstants.Success] = "Category edited Successfuly";
                 return RedirectToAction("Index");
             }
+            TempData[WebConstants.Success] = "Error while editing category";
             return View(category);
         }
 
@@ -107,6 +109,7 @@ namespace Rocky.Controllers
 
             _categoryRepository.Remove(category);
             _categoryRepository.Save();
+            TempData[WebConstants.Success] = "Category deleted Successfuly";
             return RedirectToAction("Index");
         }
     }

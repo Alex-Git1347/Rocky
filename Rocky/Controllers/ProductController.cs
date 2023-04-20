@@ -81,7 +81,8 @@ namespace Rocky.Controllers
                     }
 
                     productVM.Product.Image = fileName + extension;
-                    _productRepository.Add(productVM.Product);                    
+                    _productRepository.Add(productVM.Product);
+                    TempData[WebConstants.Success] = "Product created successfuly";
                 }
                 else
                 {
@@ -113,6 +114,7 @@ namespace Rocky.Controllers
                     }
 
                     _productRepository.Update(productVM.Product);
+                    TempData[WebConstants.Success] = "Product updated successfuly";
                 }
 
                 _productRepository.Save();
@@ -121,6 +123,7 @@ namespace Rocky.Controllers
 
             productVM.CategorySelectList = _productRepository.GetAllDropdownList(WebConstants.CategoryName);
             productVM.AppTypeSelectList = _productRepository.GetAllDropdownList(WebConstants.ApplicationTypeName);
+            TempData[WebConstants.Success] = string.Format("Error while is not valid category");
 
             return View(productVM);
         }
@@ -167,6 +170,8 @@ namespace Rocky.Controllers
 
             _productRepository.Remove(product);
             _productRepository.Save();
+            TempData[WebConstants.Success] = "Product deleted successfuly";
+
             return RedirectToAction("Index");
         }
     }

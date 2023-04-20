@@ -69,6 +69,7 @@ namespace Rocky.Controllers
 
             _inquiryHeaderRepository.Remove(inquiryHeader);
             _inquiryHeaderRepository.Save();
+            TempData[WebConstants.Success] = "Inquiry deleted successfuly";
 
             return RedirectToAction(nameof(Index));
         }
